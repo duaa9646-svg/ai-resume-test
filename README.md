@@ -1,71 +1,154 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
+<a href="https://github.com/duaa9646-svg/ai-resume-test">
+  <h1 align="center">AI Resume & Cover Letter Generator</h1>
 </a>
 
 <p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
+    An AI-powered tool to help developers create professional resumes and cover letters tailored to their target roles.
 </p>
 
 <p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
+  <a href="#getting-started"><strong>Getting Started</strong></a> ·
+  <a href="#deployment"><strong>Deployment</strong></a> ·
+  <a href="#pricing-plans"><strong>Pricing Plans</strong></a>
 </p>
 <br/>
 
 ## Features
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- **AI-Powered Generation**: Leverages OpenAI's GPT models to create tailored resumes and cover letters
+- **Developer-Focused**: Specialized templates and prompts for various developer roles (Frontend, Backend, Full Stack, DevOps, etc.)
+- **Professional PDF Export**: Download your generated documents as formatted PDFs using jspdf and html2canvas
+- **Subscription Management**: Integrated with Stripe for free and premium tier management
+- **Modern Tech Stack**: Built with Next.js 16, React 19, TypeScript, and Tailwind CSS
+- **Authentication**: Secure authentication powered by Auth.js (NextAuth.js)
+- **Database Integration**: PostgreSQL with Drizzle ORM for user data and subscription tracking
+- **Fully Responsive**: Mobile-friendly design that works on all devices
 
-## Model Providers
+## Getting Started
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. The default configuration includes [xAI](https://x.ai) models (`grok-2-vision-1212`, `grok-3-mini`) routed through the gateway.
+### Prerequisites
 
-### AI Gateway Authentication
+- Node.js 18+ and pnpm
+- PostgreSQL database (can use [Neon](https://neon.tech) for free)
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- Stripe account for payment processing ([Sign up](https://dashboard.stripe.com/register))
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+### Installation
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+1. Clone the repository:
+```bash
+git clone https://github.com/duaa9646-svg/ai-resume-test.git
+cd ai-resume-test
+```
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
-
-## Deploy Your Own
-
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/nextjs-ai-chatbot)
-
-## Running locally
-
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
-
+2. Install dependencies:
 ```bash
 pnpm install
-pnpm db:migrate # Setup database or apply latest database changes
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and add your API keys:
+- `AUTH_SECRET`: Generate with `openssl rand -base64 32`
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `POSTGRES_URL`: Your PostgreSQL connection string
+- `STRIPE_SECRET_KEY`: Your Stripe secret key
+- `STRIPE_PUBLISHABLE_KEY`: Your Stripe publishable key
+- `STRIPE_WEBHOOK_SECRET`: Your Stripe webhook secret
+- `STRIPE_PRICE_ID_PREMIUM`: Your Stripe price ID for premium plan
+
+4. Set up the database:
+```bash
+pnpm db:migrate
+```
+
+5. Run the development server:
+```bash
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Project Structure
+
+```
+├── app/
+│   ├── (auth)/              # Authentication pages
+│   ├── api/
+│   │   ├── generate/        # AI content generation endpoint
+│   │   └── stripe/          # Stripe payment webhooks and checkout
+│   ├── generator/           # Resume & cover letter form page
+│   ├── profile/             # User profile & subscription management
+│   └── page.tsx             # Landing page
+├── components/
+│   ├── ui/                  # Reusable UI components (shadcn/ui)
+│   └── ...                  # Other components
+├── lib/
+│   ├── ai/                  # AI model configuration
+│   ├── db/                  # Database schema and migrations
+│   └── subscription/        # Subscription tier logic
+└── public/                  # Static assets
+```
+
+## Pricing Plans
+
+### Free Plan
+- 3 resume generations per month
+- 3 cover letter generations per month
+- PDF export
+- Basic templates
+
+### Premium Plan ($9.99/month)
+- Unlimited resume generations
+- Unlimited cover letter generations
+- PDF export
+- Premium templates
+- Advanced AI customization
+- Priority support
+
+## Deployment
+
+This application is optimized for deployment on [Vercel](https://vercel.com):
+
+1. Push your code to GitHub
+2. Import your repository on Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy!
+
+For Stripe webhooks, configure the webhook endpoint in your Stripe Dashboard:
+- Endpoint URL: `https://your-domain.com/api/stripe/webhook`
+- Events to listen for: `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`
+
+## Technology Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org) with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com) built on Radix UI
+- **AI**: [AI SDK](https://ai-sdk.dev) with OpenAI integration
+- **Authentication**: [Auth.js](https://authjs.dev)
+- **Database**: PostgreSQL with [Drizzle ORM](https://orm.drizzle.team)
+- **Payments**: [Stripe](https://stripe.com)
+- **PDF Generation**: jspdf and html2canvas
+- **Deployment**: [Vercel](https://vercel.com)
+
+## Extending for Other Niches
+
+This application is designed to be easily extensible for other professional niches beyond developers:
+
+1. **Update Target Roles**: Modify the role options in `app/generator/page.tsx`
+2. **Customize AI Prompts**: Edit the prompt templates in `app/api/generate/route.ts`
+3. **Add New Templates**: Create additional document templates in the components
+4. **Adjust Branding**: Update metadata and copy throughout the application
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
