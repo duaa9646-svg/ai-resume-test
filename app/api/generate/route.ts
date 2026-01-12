@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
+import { getLanguageModel } from "@/lib/ai/providers";
 
 // Interface for request body
 interface GenerateRequest {
@@ -60,10 +59,9 @@ Format the resume professionally with clear section headers and bullet points. F
 
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: getLanguageModel("openai/gpt-4.1-mini"),
       prompt,
       temperature: 0.7,
-      maxTokens: 2000,
     });
 
     return text;
@@ -105,10 +103,9 @@ Keep it concise (3-4 paragraphs), professional, and tailored to a ${roleDesc} po
 
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: getLanguageModel("openai/gpt-4.1-mini"),
       prompt,
       temperature: 0.7,
-      maxTokens: 1500,
     });
 
     return text;

@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-// Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-01-27.acacia",
-});
+/**
+ * Get Stripe instance
+ */
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+    apiVersion: "2025-02-24.acacia",
+  });
+}
 
 // Webhook secret for verifying requests from Stripe
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
@@ -22,6 +26,7 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
  */
 export async function POST(request: NextRequest) {
   try {
+    const stripe = getStripe();
     const body = await request.text();
     const signature = request.headers.get("stripe-signature");
 

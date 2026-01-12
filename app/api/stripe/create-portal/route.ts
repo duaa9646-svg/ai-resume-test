@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import Stripe from "stripe";
 
-// Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-01-27.acacia",
-});
+/**
+ * Get Stripe instance
+ */
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+    apiVersion: "2025-02-24.acacia",
+  });
+}
 
 /**
  * POST /api/stripe/create-portal
