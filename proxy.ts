@@ -17,6 +17,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow unauthenticated access to landing page, generator, and profile for MVP testing
+  if (pathname === "/" || pathname.startsWith("/generator") || pathname.startsWith("/profile")) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
